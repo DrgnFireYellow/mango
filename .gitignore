@@ -1,3 +1,6 @@
 venv
 temp.html
 __pycache__
+build
+dist
+main.spec
