@@ -157,7 +157,7 @@ def mod(root, mod_id, type):
     back_button.pack(anchor=tkinter.NW)
 
     data = requests.get(
-        f"http://api.gamebanana.com/Core/Item/Data?itemtype={type}&itemid={mod_id}&fields=name,text,Owner().name,screenshots"
+        f"http://api.gamebanana.com/Core/Item/Data?itemtype={type}&itemid={mod_id}&fields=name,text,Owner().name,screenshots,downloads"
     ).json()
     
 
@@ -166,6 +166,9 @@ def mod(root, mod_id, type):
 
     author_label = tkinter.Label(root, text="By " + data[2])
     author_label.pack()
+    
+    downloads_label = tkinter.Label(root, text="Downloads: " + str(data[4]))
+    downloads_label.pack()
 
     description = tkhtmlview.HTMLLabel(root, html=data[1])
     description.pack()
