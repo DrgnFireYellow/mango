@@ -159,22 +159,27 @@ def mod(root, mod_id, type):
     data = requests.get(
         f"http://api.gamebanana.com/Core/Item/Data?itemtype={type}&itemid={mod_id}&fields=name,text,Owner().name,screenshots,downloads"
     ).json()
-    
 
     title_label = tkinter.Label(root, text=data[0], font="Sans-Serif 18")
     title_label.pack()
 
     author_label = tkinter.Label(root, text="By " + data[2])
     author_label.pack()
-    
+
     downloads_label = tkinter.Label(root, text="Downloads: " + str(data[4]))
     downloads_label.pack()
 
     description = tkhtmlview.HTMLLabel(root, html=data[1])
     description.pack()
-    
-    download_button = tkinter.Button(root, text="Download", command=functools.partial(download, root, mod_id, type))
-    download_button.pack()
+
+    button_frame = tkinter.Frame(root)
+
+    download_button = tkinter.Button(
+        button_frame,
+        text="Download",
+        command=functools.partial(download, root, mod_id, type),
+    )
+    download_button.grid(row=1, column=1)
 
     galleryhtml = ""
 
@@ -185,32 +190,43 @@ def mod(root, mod_id, type):
         tempfile.write(galleryhtml)
 
     gallery_button = tkinter.Button(
-        root,
+        button_frame,
         text="View Screenshots (Opens In Browser)",
         command=functools.partial(
             webbrowser.open, "file://" + os.path.abspath("temp.html")
         ),
     )
-    gallery_button.pack()
+    gallery_button.grid(row=1, column=2)
+
+    button_frame.pack()
+
 
 def download(root, mod_id, type):
     base(root)
-    
+
     back_button = tkinter.Button(
         root, text="⬅︎ Go Back", command=functools.partial(search_games, root)
     )
     back_button.pack(anchor=tkinter.NW)
-    
+
     version_data = requests.get(
         f"http://api.gamebanana.com/Core/Item/Data?itemtype={type}&itemid={mod_id}&fields=Files().aFiles()"
     ).json()
-    
+
     versions = version_data[0]
-    
+
     versions_frame = tkinter.Frame(root)
-    
+
     for index, version in enumerate(versions):
-        tkinter.Label(versions_frame, text=versions[version]["_sFile"], font="Sans-Serif 18").grid(row=index+1, column=1)
-        tkinter.Button(versions_frame, text="Download", command=functools.partial(webbrowser.open, "https://gamebanana.com/dl/" + version)).grid(row=index+1, column=2)
-    
+        tkinter.Label(
+            versions_frame, text=versions[version]["_sFile"], font="Sans-Serif 18"
+        ).grid(row=index + 1, column=1)
+        tkinter.Button(
+            versions_frame,
+            text="Download",
+            command=functools.partial(
+                webbrowser.open, "https://gamebanana.com/dl/" + version
+            ),
+        ).grid(row=index + 1, column=2)
+
     versions_frame.pack()
