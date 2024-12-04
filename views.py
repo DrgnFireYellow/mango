@@ -159,6 +159,7 @@ def mod(root, mod_id, type):
     data = requests.get(
         f"http://api.gamebanana.com/Core/Item/Data?itemtype={type}&itemid={mod_id}&fields=name,text,Owner().name,screenshots"
     ).json()
+    
 
     title_label = tkinter.Label(root, text=data[0], font="Sans-Serif 18")
     title_label.pack()
@@ -168,6 +169,9 @@ def mod(root, mod_id, type):
 
     description = tkhtmlview.HTMLLabel(root, html=data[1])
     description.pack()
+    
+    download_button = tkinter.Button(root, text="Download", command=functools.partial(download, root, mod_id, type))
+    download_button.pack()
 
     galleryhtml = ""
 
@@ -185,3 +189,25 @@ def mod(root, mod_id, type):
         ),
     )
     gallery_button.pack()
+
+def download(root, mod_id, type):
+    base(root)
+    
+    back_button = tkinter.Button(
+        root, text="⬅︎ Go Back", command=functools.partial(search_games, root)
+    )
+    back_button.pack(anchor=tkinter.NW)
+    
+    version_data = requests.get(
+        f"http://api.gamebanana.com/Core/Item/Data?itemtype={type}&itemid={mod_id}&fields=Files().aFiles()"
+    ).json()
+    
+    versions = version_data[0]
+    
+    versions_frame = tkinter.Frame(root)
+    
+    for index, version in enumerate(versions):
+        tkinter.Label(versions_frame, text=versions[version]["_sFile"], font="Sans-Serif 18").grid(row=index+1, column=1)
+        tkinter.Button(versions_frame, text="Download", command=functools.partial(webbrowser.open, "https://gamebanana.com/dl/" + version)).grid(row=index+1, column=2)
+    
+    versions_frame.pack()
