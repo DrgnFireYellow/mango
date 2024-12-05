@@ -17,6 +17,16 @@ def base(root):
     info_label = tkinter.Label(root, text="A Minimal, Open Source GameBanana Client")
     info_label.pack()
 
+def donation_message(root):
+    donate_frame = tkinter.Frame(root)
+    
+    donate_label = tkinter.Label(donate_frame, text="Mango is a client for GameBanana, which mainly makes money through ads on the website. Mango does not have these ads.\nPlease consider buying Ripe (their subscription service) to help pay for their site hosting.", font="Sans-Serif 10")
+    donate_label.pack()
+    
+    donate_button = tkinter.Button(donate_frame, text="Buy Ripe", font="Sans-Serif 10", command=functools.partial(webbrowser.open, "https://gamebanana.com/ripe"))
+    donate_button.pack()
+
+    donate_frame.pack(side="bottom")
 
 def search_games(root):
     base(root)
@@ -35,6 +45,7 @@ def search_games(root):
     search_button.pack()
 
     search_frame.pack(expand=True)
+    donation_message(root)
 
 
 def search_games_results(root, query):

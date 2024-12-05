@@ -4,7 +4,7 @@ import os
 
 root = tkinter.Tk()
 root.wm_title("Mango")
-root.geometry("750x500")
+root.geometry("750x600")
 root.resizable()
 
 views.search_games(root)
